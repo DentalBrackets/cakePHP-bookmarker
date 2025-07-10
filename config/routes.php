@@ -21,6 +21,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use App\Model\Entity\Bookmark;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 
@@ -48,6 +49,14 @@ return function (RouteBuilder $routes): void {
      * `{action}` markers.
      */
     $routes->setRouteClass(DashedRoute::class);
+
+    $routes->scope(
+        '/bookmarks',
+        ['controller' => 'Bookmarks'],
+        function ($routes) {
+            $routes->connect('/tagged/*', ['action' => 'tags']);
+        }
+    );
 
     $routes->scope('/', function (RouteBuilder $builder): void {
         /*
