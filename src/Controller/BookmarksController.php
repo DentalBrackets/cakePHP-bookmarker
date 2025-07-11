@@ -11,11 +11,34 @@ namespace App\Controller;
  */
 class BookmarksController extends AppController
 {
+    public function isAuthorized($user)
+    {
+        $action = $this->request->getParam('action');
+
+        // First the method allow every time
+        if (in_array($action, ['index', 'add', 'tags'])) {
+            return true;
+        }
+
+        // All other actions requere an ID param
+        if(!$this->request->getParam('Pass.0')) {
+            return false;
+        }
+
+        // Check if the Bookmark belongs to the user
+        $id = $this->request->getParam('Pass.0');
+        $bookmark = $this->Bookmarks->get($id);
+        if ($bookmark->user_id === $user['id']) {
+            return true;
+        }
+        
+        return parent::isAuthorized($user);
+    }
+
     /**
      * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
+     *@return \Cake\Http\Response|null|void Renders view
+    */
     public function index()
     {
         $this->paginate = [

@@ -44,10 +44,42 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
 
+        // AuthComponent
+        $this->loadComponent('Auth', [
+            // Applies to the current controller handling the request
+            // expects the current controller to define isAuthorized method
+            // If the controller does not define it, falls back to the parent
+            'authorize' => 'Controller',
+            
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'email',
+                        'password' => 'password'
+                    ]
+                ],
+            ],
+            
+            'loginAction' => [
+                'controller' => 'Users',
+                'action' => 'login'
+            ],
+            
+            'unauthorizedRedirect' => $this->referer() // If unauthorized, return them to page they were just on
+        ]);
+
+        // Allow the display action so our pages controller continue to work
+        $this->Auth->allow(['display']);
+
         /*
          * Enable the following component for recommended CakePHP form protection settings.
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
+    }
+
+    public function isAuthorized($user) 
+    {
+        return false;
     }
 }
