@@ -19,7 +19,6 @@
             <fieldset>
                 <legend><?= __('Add Bookmark') ?></legend>
                 <?php
-                    echo $this->Form->control('user_id', ['options' => $users]);
                     echo $this->Form->control('title');
                     echo $this->Form->control('description');
                     echo $this->Form->control('url');
